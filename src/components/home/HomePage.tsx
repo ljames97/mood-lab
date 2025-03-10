@@ -5,7 +5,7 @@ import MyBoards from "./MyBoards";
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-gray-100">
       <Header />
       <div className="flex-1 overflow-y-auto">
         <MyBoards />

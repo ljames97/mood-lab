@@ -27,6 +27,16 @@ const dummyBoards = [
     id: 2,
     title: 'Plants',
     cover: mockCover
+  },
+  {
+    id: 2,
+    title: 'Plants',
+    cover: mockCover
+  },
+  {
+    id: 2,
+    title: 'Plants',
+    cover: mockCover
   }
 ]
 

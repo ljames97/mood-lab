@@ -1,7 +1,4 @@
 Account management:
-- Logout
-- Delete account
-- Add, change, delete a profile photo
 - login/signup error messages
 
 CRUD:
@@ -21,7 +18,9 @@ Collaboration:
 - Invite collaborators, realtime database
 - Multiple users for one account
 
-Desktop css
+Animation and Desktop css 
+- improve colors (moody gradients)
+- modal animations
 - design for desktop, medium-large screens
 - favicon
 
@@ -33,4 +32,4 @@ Final:
 - portfolio and case study
 
 Challenges:
-- modal route using parallel routing, fixed by adding default.tsx into @modals
+- modal route using parallel routing, fixed by adding default.tsx into @modals. Also closing modal on logout: disallowed any modals on /auth page but this requires using usePathname which requires useclient which isn't allowed in layout.tsx due to metadata. So needed to use ModalWrapper to deal with pathname and use client and import this into layout.tsx

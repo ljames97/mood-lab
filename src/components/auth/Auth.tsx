@@ -5,7 +5,7 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import Logo from "../home/Logo";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { auth } from "@/config/firebaseConfig";
 
 export default function Auth() {

@@ -19,7 +19,7 @@ export default function Auth() {
       await createUserWithEmailAndPassword(auth, email, password);
       router.push("/"); 
     } catch (err: any) {
-      setError(err.message);
+      setError(getErrorMessage(err.code));
     }
   }
 
@@ -28,13 +28,29 @@ export default function Auth() {
       await signInWithEmailAndPassword(auth, email, password);
       router.push("/"); // Redirect to home after login
     } catch (err: any) {
-      setError(err.message);
+      setError(getErrorMessage(err.code));
     }
   };
 
   const handleGuestLogin = () => {
     localStorage.setItem('guest', 'true');
     router.push("/");
+  };
+
+  const getErrorMessage = (errorCode: string): string => {
+    const errorMessages: { [key: string]: string } = {
+      "auth/invalid-email": "Invalid email address.",
+      "auth/invalid-credential": "Incorrect password.",
+      "auth/user-disabled": "User account is disabled.",
+      "auth/user-not-found": "No user found with this email.",
+      "auth/wrong-password": "Incorrect password.",
+      "auth/email-already-in-use": "Email is already in use.",
+      "auth/weak-password": "Password is too weak.",
+      "auth/missing-password": "Please enter a password.",
+      "auth/missing-email": "Please enter an email address.",
+    };
+  
+    return errorMessages[errorCode] || "An unknown error occurred. Please try again.";
   };
 
   return (

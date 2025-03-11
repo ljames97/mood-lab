@@ -1,6 +1,3 @@
-Account management:
-- login/signup error messages
-
 CRUD:
 - add new board (title, description, initial inspo)
 - update board name/description/photo

@@ -1,8 +1,8 @@
 Account management:
-- Account manager modal
 - Logout
 - Delete account
-- Add a profile photo
+- Add, change, delete a profile photo
+- login/signup error messages
 
 CRUD:
 - add new board (title, description, initial inspo)
@@ -23,3 +23,14 @@ Collaboration:
 
 Desktop css
 - design for desktop, medium-large screens
+- favicon
+
+Final:
+- typescript and documentation
+- readme
+- tests
+- gh-pages
+- portfolio and case study
+
+Challenges:
+- modal route using parallel routing, fixed by adding default.tsx into @modals

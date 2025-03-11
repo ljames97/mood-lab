@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/store/AuthContext";
+import ModalWrapper from "@/components/modal/ModalWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,17 +20,20 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
+  modals,
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{
+  modals: React.ReactNode;
+  children: React.ReactNode;
+}>) {
   return (
     <AuthProvider> 
       <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          {children}
-        </body>
-      </html>
+      <body>
+        <ModalWrapper modals={modals} />
+        <div className="relative">{children}</div>
+      </body>
+    </html>
     </AuthProvider>
   );
 }

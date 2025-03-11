@@ -1,2 +1,32 @@
-home page ui:
-- 
+CRUD:
+- add new board (title, description, initial inspo)
+- update board name/description/photo
+- pin board to top
+- delete board
+
+Board editor:
+- interactive editor with shape, text, color, drag/drop, images
+- export as pdf
+
+Color theme:
+- change theme color
+
+Collaboration: 
+- Invite collaborators, realtime database
+- Multiple users for one account
+
+Animation and Desktop css 
+- improve colors (moody gradients)
+- modal animations
+- design for desktop, medium-large screens
+- favicon
+
+Final:
+- typescript and documentation
+- readme
+- tests
+- gh-pages
+- portfolio and case study
+
+Challenges:
+- modal route using parallel routing, fixed by adding default.tsx into @modals. Also closing modal on logout: disallowed any modals on /auth page but this requires using usePathname which requires useclient which isn't allowed in layout.tsx due to metadata. So needed to use ModalWrapper to deal with pathname and use client and import this into layout.tsx

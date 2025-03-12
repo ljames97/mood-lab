@@ -1,6 +1,6 @@
 CRUD:
 - update board name/description/photo
-- pin board to top
+(- pin board to top)
 - delete board
 
 Board editor:

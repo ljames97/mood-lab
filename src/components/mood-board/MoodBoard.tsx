@@ -64,7 +64,7 @@ export default function MoodBoardPage() {
 
   return (
     <div className="h-screen flex flex-col bg-gray-100">
-      <Navbar />
+      <Navbar title={moodboard.title} />
       <div className="bg-white flex-grow flex m-8 shadow-lg"></div>
       <Toolbar />
     </div>

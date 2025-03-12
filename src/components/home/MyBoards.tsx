@@ -84,6 +84,10 @@ export default function MyBoards() {
 
   if (loading) return <p>Loading...</p>;
 
+  const handleBoardClick = (board) => {
+    router.push(`/moodboard/${board.id}`);
+  }
+
   return (
     <div className="my-12 flex flex-col items-center justify-center">
       <button onClick={handleCreateProject} className="absolute left-10 top-35 flex rounded-full shadow-md bg-primary-darkest p-4 mb-6 z-2">
@@ -95,7 +99,9 @@ export default function MyBoards() {
       </button>
       <div className="mt-18 gap-8 grid grid-cols-2 w-3/4 place-items-center">
         {boards.map((board, index) => (
-          <BoardWidget board={board} key={index} />
+          <div onClick={() => handleBoardClick(board)}>
+            <BoardWidget board={board} key={index} />
+          </div>
         ))}
       </div>
     </div>

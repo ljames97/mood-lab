@@ -1,5 +1,5 @@
 CRUD:
-- add new board (title, description, initial inspo)
+- click through to each
 - update board name/description/photo
 - pin board to top
 - delete board

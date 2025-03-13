@@ -60,6 +60,7 @@ export default function Auth() {
         {error && <p className="text-red-500">{error}</p>}
         <label className="hidden" htmlFor="email">Email</label>
         <input 
+          className="border border-white rounded-3xl py-4 px-8 pl-6 w-full"
           type="email"
           id="email"
           placeholder="Email"
@@ -68,6 +69,7 @@ export default function Auth() {
         />
         <label className="hidden" htmlFor="password">Password</label>
         <input 
+          className="border border-white rounded-3xl py-4 px-8 pl-6 w-full"
           type="password"
           id="password"
           placeholder="Password"

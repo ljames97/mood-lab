@@ -2,10 +2,12 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/config/firebaseConfig";
 import Navbar from "./Navbar";
 import Toolbar from "./Toolbar";
+import Image from "next/image";
+import { logo } from "@/assets";
 
 export default function MoodBoardPage() {
   const params = useParams();
@@ -59,13 +61,54 @@ export default function MoodBoardPage() {
     fetchMoodboard();
   }, [id, isGuest, router]);
 
+  const renameTitle = async (newTitle) => {
+    if (!moodboard) return;
+
+    if (isGuest) {
+      const guestBoards = JSON.parse(localStorage.getItem("guest_moodboards") || "[]");
+      const updatedBoards = guestBoards.map(board =>
+        board.id === id ? { ...board, title: newTitle } : board
+      );
+
+      localStorage.setItem("guest_moodboards", JSON.stringify(updatedBoards));
+      setMoodboard(prev => ({ ...prev, title: newTitle }));
+    } else {
+      try {
+        const docRef = doc(db, "moodboards", id);
+        await updateDoc(docRef, { title: newTitle });
+        setMoodboard(prev => ({ ...prev, title: newTitle }));
+      } catch (error) {
+        console.error("Error updating title:", error.message);
+      }
+    }
+  };
+
+  const deleteMoodboard = async () => {
+    if (!id) return;
+
+    if (isGuest) {
+      let guestBoards = JSON.parse(localStorage.getItem("guest_moodboards") || "[]");
+      guestBoards = guestBoards.filter(board => board.id !== id);
+      localStorage.setItem("guest_moodboards", JSON.stringify(guestBoards));
+      router.replace("/");
+    } else {
+      try {
+        await deleteDoc(doc(db, "moodboards", id));
+        router.replace("/");
+      } catch (error) {
+        console.error("Error deleting moodboard:", error.message);
+      }
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (!moodboard) return <p>Error: Moodboard not found</p>;
 
   return (
     <div className="h-screen flex flex-col bg-gray-100">
-      <Navbar title={moodboard.title} />
-      <div className="bg-white flex-grow flex m-8 shadow-lg"></div>
+      <Navbar renameTitle={renameTitle} deleteMoodboard={deleteMoodboard} title={moodboard.title} />
+      <div className="export-content bg-white flex-grow flex m-8 shadow-lg">
+      </div>
       <Toolbar />
     </div>
   );

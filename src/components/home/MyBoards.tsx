@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db, auth } from "@/config/firebaseConfig";
-import { createMoodboard } from "../utils/createMoodboard";
+import { createMoodboard } from "../utils/moodboardUtils";
 import { onAuthStateChanged } from "firebase/auth";
 
 export default function MyBoards() {

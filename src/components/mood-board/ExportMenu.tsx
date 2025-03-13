@@ -1,4 +1,4 @@
-export default function ExportMenu({ toggleEdit, toggleSubMenu, deleteMoodboard }) {
+export default function ExportMenu({ toggleEdit, toggleSubMenu, handleDeleteMoodboard }) {
 
   const handleRename = () => {
     toggleSubMenu();
@@ -41,7 +41,7 @@ export default function ExportMenu({ toggleEdit, toggleSubMenu, deleteMoodboard 
     <ul className="text-black text-sm">
         <li onClick={handleRename} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Rename</li>
         <li onClick={handleExportPDF} className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Export as PDF</li>
-        <li onClick={deleteMoodboard} className="px-4 py-2 text-red-500 hover:bg-red-100 cursor-pointer">Delete</li>
+        <li onClick={handleDeleteMoodboard} className="px-4 py-2 text-red-500 hover:bg-red-100 cursor-pointer">Delete</li>
     </ul>
   )
 }

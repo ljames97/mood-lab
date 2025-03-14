@@ -1,14 +1,14 @@
 'use client';
 
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/config/firebaseConfig";
 import Navbar from "./Navbar";
 import Toolbar from "./Toolbar";
-import Image from "next/image";
-import { logo } from "@/assets";
 import { deleteMoodboard, renameTitle } from "../utils/moodboardUtils";
+import CanvasPage from "./Canvas";
+import { Canvas, Rect, Textbox } from "fabric";
 
 export default function MoodBoardPage() {
   const params = useParams();
@@ -16,6 +16,7 @@ export default function MoodBoardPage() {
   const [moodboard, setMoodboard] = useState(null);
   const [loading, setLoading] = useState(true);
   const isGuest = localStorage.getItem("guest") === "true";
+  const fabricRef = useRef(Canvas);
 
   // Ensure `id` is a string (fixes potential array issue)
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
@@ -68,7 +69,35 @@ export default function MoodBoardPage() {
 
   const handleDeleteMoodboard = () => {
     deleteMoodboard(id, isGuest);
+    router.replace("/");
   }
+
+  const addRectangle = () => {
+    if (!fabricRef.current) return;
+    const rect = new Rect({
+      left: 100,
+      top: 100,
+      fill: "blue",
+      width: 100,
+      height: 100,
+      selectable: true, // Allow dragging and resizing
+    });
+    fabricRef.current.add(rect);
+  };
+
+  const addText = () => {
+    if (!fabricRef.current) return;
+    const text = new Textbox("Click to edit", {
+      left: 200,
+      top: 200,
+      fontSize: 20,
+      fill: "black",
+      editable: true,
+      selectable: true,
+      width: 200,
+    });
+    fabricRef.current.add(text);
+  };
 
   if (loading) return <p>Loading...</p>;
   if (!moodboard) return <p>Error: Moodboard not found</p>;
@@ -76,9 +105,8 @@ export default function MoodBoardPage() {
   return (
     <div className="h-screen flex flex-col bg-gray-100">
       <Navbar handleRenameTitle={handleRenameTitle} handleDeleteMoodboard={handleDeleteMoodboard} title={moodboard.title} />
-      <div className="export-content bg-white flex-grow flex m-8 shadow-lg">
-      </div>
-      <Toolbar />
+      <CanvasPage setFabricCanvas={(canvas) => (fabricRef.current = canvas)}  />
+      <Toolbar addRectangle={addRectangle} addText={addText} />
     </div>
   );
 }

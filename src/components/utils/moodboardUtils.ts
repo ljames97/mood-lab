@@ -70,11 +70,9 @@ export const deleteMoodboard = async (id, isGuest) => {
     let guestBoards = JSON.parse(localStorage.getItem("guest_moodboards") || "[]");
     guestBoards = guestBoards.filter(board => board.id !== id);
     localStorage.setItem("guest_moodboards", JSON.stringify(guestBoards));
-    router.replace("/");
   } else {
     try {
       await deleteDoc(doc(db, "moodboards", id));
-      router.replace("/");
     } catch (error) {
       console.error("Error deleting moodboard:", error.message);
     }

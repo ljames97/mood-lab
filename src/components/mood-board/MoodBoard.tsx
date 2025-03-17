@@ -9,6 +9,8 @@ import Toolbar from "./Toolbar";
 import { deleteMoodboard, renameTitle } from "../utils/moodboardUtils";
 import CanvasPage from "./Canvas";
 import { Canvas, Rect, Textbox } from "fabric";
+import * as fabric from "fabric";
+import { uploadImage } from "../utils/imageUpload";
 
 export default function MoodBoardPage() {
   const params = useParams();
@@ -17,6 +19,7 @@ export default function MoodBoardPage() {
   const [loading, setLoading] = useState(true);
   const isGuest = localStorage.getItem("guest") === "true";
   const fabricRef = useRef(Canvas);
+  const fileInputRef = useRef(null);
 
   // Ensure `id` is a string (fixes potential array issue)
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
@@ -103,6 +106,76 @@ export default function MoodBoardPage() {
     fabricRef.current.renderAll(); // Force canvas to update
   };
 
+  const triggerFileUpload = () => {
+    console.log('click')
+    fileInputRef.current?.click();
+  };
+
+  // Handle Image Upload & Add to Canvas
+  const addImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !fabricRef.current) return;
+
+    const imageUrl = await uploadImage(file, isGuest);
+    if (!imageUrl) return;
+
+    const imgElement = new window.Image(); // ✅ Use `window.Image()`
+    imgElement.src = imageUrl;
+
+    imgElement.onload = () => {
+      const img = new fabric.Image(imgElement, {
+        left: 150,
+        top: 150,
+        scaleX: 0.5,
+        scaleY: 0.5,
+        selectable: true,
+      });
+
+      fabricRef.current!.add(img);
+      fabricRef.current!.renderAll();
+    };
+
+    // Clear file input value so selecting the same file again works
+    event.target.value = "";
+  };
+
+  const addStickyNote = () => {
+    if (!fabricRef.current) return;
+  
+    const stickyNote = new fabric.Textbox("Add note...", {
+      left: 150,
+      top: 150,
+      width: 120,
+      fontSize: 18,
+      fontFamily: "Arial",
+      fill: "black",
+      backgroundColor: "#FFEB3B",
+      editable: true,
+      selectable: true,
+      lineHeight: 1.5,
+      textAlign: "left",
+      wrap: "word",
+      splitByGrapheme: true,
+    });
+  
+    stickyNote.set("height", 120);
+
+    // Disable text scaling to prevent distortion
+  stickyNote.setControlsVisibility({
+    mt: false, // Middle Top
+    mb: false, // Middle Bottom
+    ml: false, // Middle Left
+    mr: false, // Middle Right
+  });
+  
+    fabricRef.current.add(stickyNote);
+    fabricRef.current.setActiveObject(stickyNote);
+    stickyNote.bringToFront();
+    fabricRef.current.renderAll();
+  };
+  
+  
+
   if (loading) return <p>Loading...</p>;
   if (!moodboard) return <p>Error: Moodboard not found</p>;
 
@@ -110,7 +183,15 @@ export default function MoodBoardPage() {
     <div className="h-screen flex flex-col bg-gray-100">
       <Navbar handleRenameTitle={handleRenameTitle} handleDeleteMoodboard={handleDeleteMoodboard} title={moodboard.title} />
       <CanvasPage setFabricCanvas={(canvas) => (fabricRef.current = canvas)}  />
-      <Toolbar addRectangle={addRectangle} addText={addText} />
+      <Toolbar triggerFileUpload={triggerFileUpload} addRectangle={addRectangle} addText={addText} addStickyNote={addStickyNote} />
+      <input
+        type="file"
+        accept="image/*"
+        className="hidden"
+        ref={fileInputRef}
+        onChange={addImage}
+      />
+
     </div>
   );
 }

@@ -38,6 +38,37 @@ export default function CanvasPage({ setFabricCanvas }) {
       setToolPosition({ top: transformedTop, left: transformedLeft });
     };
 
+    // canvas.on("object:moving", (e) => {
+    //   const obj = e.target;
+    //   if (!obj) return;
+  
+    //   const bounds = {
+    //     left: 0,
+    //     top: 0,
+    //     right: canvas.width - obj.width! * obj.scaleX!,
+    //     bottom: canvas.height - obj.height! * obj.scaleY!,
+    //   };
+  
+    //   if (obj.left! < bounds.left) obj.left = bounds.left;
+    //   if (obj.top! < bounds.top) obj.top = bounds.top;
+    //   if (obj.left! > bounds.right) obj.left = bounds.right;
+    //   if (obj.top! > bounds.bottom) obj.top = bounds.bottom;
+    // });
+
+    canvas.on("object:scaling", (e) => {
+      const obj = e.target;
+      if (!obj) return;
+  
+      if (obj.left! < 0) obj.left = 0;
+      if (obj.top! < 0) obj.top = 0;
+      if (obj.left! + obj.width! * obj.scaleX! > canvas.width) {
+        obj.scaleX = (canvas.width - obj.left!) / obj.width!;
+      }
+      if (obj.top! + obj.height! * obj.scaleY! > canvas.height) {
+        obj.scaleY = (canvas.height - obj.top!) / obj.height!;
+      }
+    });
+
     // Resize canvas dynamically
     const handleResize = () => {
       const newWidth = containerRef.current.clientWidth;

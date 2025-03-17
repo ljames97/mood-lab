@@ -1,6 +1,4 @@
 Board editor:
-- image upload
-- sticky notes
 - update/save state
 
 Color theme:

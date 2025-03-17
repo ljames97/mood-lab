@@ -13,6 +13,7 @@
     "fabric": "^6.6.1",
     "firebase": "^11.4.0",
     "html2canvas": "^1.4.1",
+    "idb": "^8.0.2",
     "next": "15.2.1",
     "puppeteer": "^24.4.0",
     "react": "^19.0.0",

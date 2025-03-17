@@ -1,9 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas, Rect, Textbox } from "fabric";
 import { HexColorPicker } from "react-colorful"; 
+import { doc, getDoc } from "firebase/firestore";
+import { db, storage } from "@/config/firebaseConfig";
+import { loadMoodboardFromIndexedDB } from "../utils/indexedDBUtils";
+import { deleteObject, ref } from "firebase/storage";
 
-export default function CanvasPage({ setFabricCanvas }) {
+export default function CanvasPage({id, setFabricCanvas }) {
   const canvasRef = useRef(null);
+  const isGuest = localStorage.getItem("guest") === "true";
   const containerRef = useRef(null);
   const [selectedObject, setSelectedObject] = useState(null);
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -25,6 +30,29 @@ export default function CanvasPage({ setFabricCanvas }) {
 
     setFabricCanvas(canvas);
 
+    const loadMoodboard = async () => {
+      if (!canvas) return;
+  
+      let canvasState = isGuest
+        ? await loadMoodboardFromIndexedDB(id)
+        : (await getDoc(doc(db, "moodboards", id))).data()?.canvasState;
+  
+      if (!canvasState) {
+        console.warn("No saved moodboard found.");
+        return;
+      }
+  
+      console.log("Loading canvas state:", canvasState);
+  
+      canvas.loadFromJSON(canvasState, () => {
+        canvas.renderAll();
+        canvas.requestRenderAll();
+        console.log("Moodboard loaded successfully.");
+      });
+    };
+  
+    loadMoodboard();
+
     const updateToolPosition = (obj) => {
       if (!obj || !canvasRef.current) return;
 
@@ -37,23 +65,6 @@ export default function CanvasPage({ setFabricCanvas }) {
 
       setToolPosition({ top: transformedTop, left: transformedLeft });
     };
-
-    // canvas.on("object:moving", (e) => {
-    //   const obj = e.target;
-    //   if (!obj) return;
-  
-    //   const bounds = {
-    //     left: 0,
-    //     top: 0,
-    //     right: canvas.width - obj.width! * obj.scaleX!,
-    //     bottom: canvas.height - obj.height! * obj.scaleY!,
-    //   };
-  
-    //   if (obj.left! < bounds.left) obj.left = bounds.left;
-    //   if (obj.top! < bounds.top) obj.top = bounds.top;
-    //   if (obj.left! > bounds.right) obj.left = bounds.right;
-    //   if (obj.top! > bounds.bottom) obj.top = bounds.bottom;
-    // });
 
     canvas.on("object:scaling", (e) => {
       const obj = e.target;
@@ -115,6 +126,8 @@ export default function CanvasPage({ setFabricCanvas }) {
     };
   }, [setFabricCanvas]);
 
+
+
   // Handle Color Change
   const handleColorChange = (newColor) => {
     setColor(newColor);
@@ -126,10 +139,27 @@ export default function CanvasPage({ setFabricCanvas }) {
 
   // Delete the Selected Object
   const deleteSelectedObject = () => {
-    if (selectedObject) {
-      selectedObject.canvas.remove(selectedObject);
-      setSelectedObject(null);
+    if (!selectedObject || !selectedObject.canvas) return;
+    console.log('DELETE IMAGE', selectedObject)
+
+
+    if (selectedObject.type === "image" && selectedObject._element?.src) {
+      const imageUrl = selectedObject._element.src;
+      console.log('DELETING IMAGE')
+
+      // Delete from Firebase Storage if it's a Firebase image
+      if (imageUrl.includes("firebasestorage.googleapis.com")) {
+        const imagePath = decodeURIComponent(imageUrl.split("?")[0].split("/o/")[1]);
+        const storageRef = ref(storage, imagePath);
+
+        deleteObject(storageRef)
+          .then(() => console.log(`Deleted image from Firebase: ${imagePath}`))
+          .catch((error) => console.error("Error deleting image from Firebase:", error));
+      }
     }
+
+    selectedObject.canvas.remove(selectedObject);
+    setSelectedObject(null);
   };
 
   return (

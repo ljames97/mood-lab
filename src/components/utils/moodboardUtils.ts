@@ -1,5 +1,6 @@
 import { db, auth } from "@/config/firebaseConfig";
 import { collection, addDoc, serverTimestamp, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { deleteMoodboardDB } from "./indexedDBUtils";
 
 /**
  * Creates a new moodboard and returns the ID.
@@ -77,4 +78,6 @@ export const deleteMoodboard = async (id, isGuest) => {
       console.error("Error deleting moodboard:", error.message);
     }
   }
+
+  deleteMoodboardDB(id, isGuest)
 };

@@ -1,6 +1,3 @@
-Board editor:
-- update/save state
-
 Color theme:
 - change theme color
 

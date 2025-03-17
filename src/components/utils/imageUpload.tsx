@@ -1,6 +1,8 @@
 import { storage, auth } from "@/config/firebaseConfig";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { saveImageToIndexedDB } from "./indexedDBUtils";
 
+// Upload image (Firebase for logged-in users, IndexedDB for guests)
 export const uploadImage = async (file: File, guest: boolean): Promise<string | null> => {
   if (!file) return null;
 
@@ -15,19 +17,11 @@ export const uploadImage = async (file: File, guest: boolean): Promise<string | 
       const downloadURL = await getDownloadURL(storageRef);
       return downloadURL;
     } catch (error) {
-      console.error("Error uploading image:", error);
+      console.error("Error uploading image to Firebase:", error);
       return null;
     }
   } else {
-    // LocalStorage Upload for Guests
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const dataURL = reader.result as string;
-        sessionStorage.setItem(`guest_image_${Date.now()}`, dataURL);
-        resolve(dataURL);
-      };
-      reader.readAsDataURL(file);
-    });
+    // IndexedDB Upload for Guests
+    return await saveImageToIndexedDB(file);
   }
 };

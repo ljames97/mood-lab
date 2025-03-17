@@ -1,12 +1,14 @@
 Board editor:
-- interactive editor with shape, text, color, drag/drop, images
+- image upload
+- sticky notes
+- update/save state
 
 Color theme:
 - change theme color
 
-Collaboration: 
+(Collaboration: 
 - Invite collaborators, realtime database
-- Multiple users for one account
+- Multiple users for one account)
 
 Animation and Desktop css 
 - improve colors (moody gradients)
@@ -23,3 +25,4 @@ Final:
 
 Challenges:
 - modal route using parallel routing, fixed by adding default.tsx into @modals. Also closing modal on logout: disallowed any modals on /auth page but this requires using usePathname which requires useclient which isn't allowed in layout.tsx due to metadata. So needed to use ModalWrapper to deal with pathname and use client and import this into layout.tsx
+- fabric version issues with import, deciding on using fabric vs manually creating the editor functionality

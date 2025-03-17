@@ -77,7 +77,7 @@ export default function MoodBoardPage() {
     const rect = new Rect({
       left: 100,
       top: 100,
-      fill: "blue",
+      fill: "black",
       width: 100,
       height: 100,
       selectable: true, // Allow dragging and resizing
@@ -94,9 +94,13 @@ export default function MoodBoardPage() {
       fill: "black",
       editable: true,
       selectable: true,
-      width: 200,
+      width: 100,
     });
+
     fabricRef.current.add(text);
+    fabricRef.current.setActiveObject(text); // Select the text box immediately
+    text.bringToFront(); // Bring text to front
+    fabricRef.current.renderAll(); // Force canvas to update
   };
 
   if (loading) return <p>Loading...</p>;

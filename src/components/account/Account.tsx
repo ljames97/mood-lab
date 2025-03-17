@@ -4,11 +4,10 @@
 import { useRouter } from "next/navigation";
 import ProfilePhoto from "../home/ProfilePhoto";
 import { logOut } from "@/config/auth";
-import { useAuth } from "@/store/AuthContext";
 import { deleteUser, updateProfile } from "firebase/auth";
 import { auth, storage } from "@/config/firebaseConfig";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 export default function Account() {
   const router = useRouter();

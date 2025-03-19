@@ -1,8 +1,6 @@
 Animation and Desktop css 
-- improve colors (moody gradients)
 - modal animations
 - design for desktop, medium-large screens
-- favicon
 
 Final:
 - typescript and documentation

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/store/AuthContext";
 import ModalWrapper from "@/components/modal/ModalWrapper";
+import { ThemeProvider } from "@/store/ThemeContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,12 +29,14 @@ export default function RootLayout({
 }>) {
   return (
     <AuthProvider> 
-      <html lang="en">
-      <body>
-        <ModalWrapper modals={modals} />
-        <div className="relative">{children}</div>
-      </body>
-    </html>
+      <ThemeProvider>
+        <html lang="en">
+          <body>
+            <ModalWrapper modals={modals} />
+            <div className="relative">{children}</div>
+          </body>
+        </html>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

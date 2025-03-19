@@ -1,5 +1,4 @@
 Animation and Desktop css 
-- change theme color
 - improve colors (moody gradients)
 - modal animations
 - design for desktop, medium-large screens

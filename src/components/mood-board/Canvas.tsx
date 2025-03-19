@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Canvas, Rect, Textbox } from "fabric";
+import { Canvas } from "fabric";
 import { HexColorPicker } from "react-colorful"; 
 import { doc, getDoc } from "firebase/firestore";
 import { db, storage } from "@/config/firebaseConfig";

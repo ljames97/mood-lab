@@ -153,7 +153,7 @@ export default function MoodBoardPage() {
     const imageId = await uploadImage(file, isGuest);
     if (!imageId) return;
   
-    // ✅ If guest, load from IndexedDB
+    // If guest, load from IndexedDB
     let imageUrl = imageId;
     if (isGuest) {
       imageUrl = await loadImageFromIndexedDB(imageId);

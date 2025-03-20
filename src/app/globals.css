@@ -3,13 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --accent: #FF5722;
-  --primary-lightest: #FFBB94;
-  --primary-light: #FB9590;
-  --primary-medium: #DC586D;
-  --primary-dark: #A33757;
-  --primary-darker: #852E4E;
-  --primary-darkest: #4C1D3D;
+  --theme-color: #4C1D3D;
 }
 
 @theme inline {
@@ -26,6 +20,10 @@
   --color-primary-darkest: var(--primary-darkest);
 }
 
+.bg-primary-darkest {
+  background-color: var(--theme-color) !important;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -34,7 +32,7 @@
 }
 
 body {
-  background: var(--background);
+  background: var(--theme-color);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/store/AuthContext";
 import ModalWrapper from "@/components/modal/ModalWrapper";
+import { ThemeProvider } from "@/store/ThemeContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,6 +18,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Mood Lab",
   description: "Create and collaborate on mood boards",
+  icons: {
+    icon: '/favicon.png'
+
+  }
 };
 
 export default function RootLayout({
@@ -28,12 +33,14 @@ export default function RootLayout({
 }>) {
   return (
     <AuthProvider> 
-      <html lang="en">
-      <body>
-        <ModalWrapper modals={modals} />
-        <div className="relative">{children}</div>
-      </body>
-    </html>
+      <ThemeProvider>
+        <html lang="en">
+          <body>
+            <ModalWrapper modals={modals} />
+            <div className="relative">{children}</div>
+          </body>
+        </html>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

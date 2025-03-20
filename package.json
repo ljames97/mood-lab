@@ -12,6 +12,7 @@
     "canvg": "^4.0.3",
     "fabric": "^6.6.1",
     "firebase": "^11.4.0",
+    "framer-motion": "^12.5.0",
     "html2canvas": "^1.4.1",
     "idb": "^8.0.2",
     "next": "15.2.1",

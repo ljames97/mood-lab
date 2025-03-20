@@ -56,11 +56,11 @@ export default function Auth() {
   return (
     <div className="bg-primary-darkest h-screen flex flex-col justify-center items-center">
       <Logo />
-      <form className="flex flex-col items-center text-white gap-5 w-2/3 mt-8">
+      <form className="flex flex-col items-center text-white gap-5 w-2/3 mt-8 md:w-1/5 md:mt-10">
         {error && <p className="text-red-500">{error}</p>}
         <label className="hidden" htmlFor="email">Email</label>
         <input 
-          className="border border-white rounded-3xl py-4 px-8 pl-6 w-full"
+          className="hover:bg-white/20 border border-white rounded-3xl py-4 px-8 pl-6 w-full"
           type="email"
           id="email"
           placeholder="Email"
@@ -69,7 +69,7 @@ export default function Auth() {
         />
         <label className="hidden" htmlFor="password">Password</label>
         <input 
-          className="border border-white rounded-3xl py-4 px-8 pl-6 w-full"
+          className="hover:bg-white/20 border border-white rounded-3xl py-4 px-8 pl-6 w-full"
           type="password"
           id="password"
           placeholder="Password"
@@ -77,10 +77,10 @@ export default function Auth() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <div className="flex gap-4 mt-4">
-          <button type="button" onClick={handleSignUp} className="border border-white/80 rounded-3xl p-3 px-6">Signup</button>
-          <button type="button" onClick={handleLogin} className="border border-white/80 rounded-3xl p-3 px-6">Login</button>
+          <button type="button" onClick={handleSignUp} className="hover:bg-white/20 hover:cursor-pointer border border-white/80 rounded-3xl p-3 px-6">Signup</button>
+          <button type="button" onClick={handleLogin} className="hover:bg-white/20 hover:cursor-pointer border border-white/80 rounded-3xl p-3 px-6">Login</button>
         </div>
-        <button type="button" onClick={handleGuestLogin} className="text-sm text-white/80 tracking-widest">Login as guest</button>
+        <button type="button" onClick={handleGuestLogin} className="hover:cursor-pointer text-sm text-white/80 tracking-widest">Login as guest</button>
       </form>
       <p className="text-white/80 pb-6 fixed bottom-0">© 2025 MoodLab.</p>
     </div>

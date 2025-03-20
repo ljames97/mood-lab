@@ -26,7 +26,10 @@ export default function Header() {
 
   return (
     <div className="flex justify-between items-center p-8 px-8 bg-primary-darkest">
-      <Logo />
+      <div className="hover:cursor-pointer">
+        <Logo />
+      </div>
+
 
       <svg
         onClick={showColorModal}
@@ -52,7 +55,7 @@ export default function Header() {
         <ColorModal colorModal={colorModal} setColorModal={setColorModal} />
       )}
 
-      <div onClick={handleClick}>
+      <div className="hover:cursor-pointer" onClick={handleClick}>
         <ProfilePhoto size={40} />
       </div>
     </div>

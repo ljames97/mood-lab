@@ -1,13 +1,12 @@
-Animation and Desktop css 
-- modal animations
-- design for desktop, medium-large screens
-
 Final:
+- production build + deploy on vercel
 - typescript and documentation
 - readme
 - tests
-- gh-pages
 - portfolio and case study
+
+- need to fix scaling issues/aspect ratio between mobile vs desktop
+- board cover photo based on recent upload
 
 (Collaboration: 
 - Invite collaborators, realtime database

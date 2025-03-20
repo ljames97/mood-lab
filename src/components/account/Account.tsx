@@ -69,9 +69,9 @@ export default function Account() {
   return (
     <>
       <div className="flex flex-col items-center text-white/90">
-        <div className='flex justify-between w-screen p-12 px-8 pb-12 text-2xl'>
-          <h3>Your Account</h3>
-          <button onClick={handleClick}>X</button>
+        <div className='flex justify-between w-screen md:w-full p-12 px-8 pb-12 text-2xl'>
+          <h3 className="tracking-widest">Your Account</h3>
+          <button className="hover:cursor-pointer" onClick={handleClick}>X</button>
         </div>
         <ProfilePhoto size={120} />
         <input
@@ -82,14 +82,14 @@ export default function Account() {
           onChange={handleFileChange}
         />
       <ul className="self-start mt-12 tracking-widest">
-        <li onClick={triggerFileUpload} className="border-b border-white/80 p-4 py-6 w-screen">
+        <li onClick={triggerFileUpload} className="hover:cursor-pointer hover:bg-white/20 border-b border-white/80 p-4 py-6 w-screen">
           UPDATE AVATAR
         </li>
-        <li onClick={handleLogout} className="border-b border-white/80 p-4 py-6 w-screen">
+        <li onClick={handleLogout} className="hover:cursor-pointer hover:bg-white/20 border-b border-white/80 p-4 py-6 w-screen">
           {guest === 'false' ? 'LOGOUT' : 'LOGOUT GUEST'}
         </li>
         {guest === 'false' && (
-          <li onClick={handleDeleteAccount} className="border-b border-white/80 p-4 py-6 w-screen">
+          <li onClick={handleDeleteAccount} className="hover:cursor-pointer hover:bg-white/20 border-b border-white/80 p-4 py-6 w-screen">
           DELETE ACCOUNT
           </li>
         )}

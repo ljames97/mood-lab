@@ -24,7 +24,7 @@ export default function Modal({ children }) {
       animate={{ x: isModalOpen ? "0%" : "100%" }}
       exit={{ x: "100%" }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="fixed inset-0 z-[9999] bg-primary-darkest"
+      className="fixed inset-0 z-[9999] bg-primary-darkest md:w-1/3 lg:w-1/4 md:ml-auto shadow-xl"
       >
       {children}
     </motion.div>

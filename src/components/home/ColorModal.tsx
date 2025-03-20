@@ -38,7 +38,7 @@ export default function ColorModal({ colorModal, setColorModal }) {
     animate={{ opacity: 1, scale: 1 }}
     exit={{ opacity: 0, scale: 0.8 }}
     transition={{ duration: 0.1, ease: "easeOut" }}
-    className="p-4 fixed top-30 right-5 bg-white rounded-lg shadow-lg"
+    className="p-4 fixed top-30 right-5 bg-white rounded-lg shadow-lg z-500"
   >
     <div className="flex gap-2">
       {colors.map((color, index) => (

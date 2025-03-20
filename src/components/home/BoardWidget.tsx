@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function BoardWidget({ board }) {
   return (
     <div className="flex flex-col w-fit gap-2 items-center text-black">
-      <div className="bg-white shadow-lg w-[150px] h-[150px] relative overflow-hidden rounded-lg">
+      <div className="hover:bg-black/10 bg-white shadow-lg w-[150px] h-[150px] relative overflow-hidden rounded-lg">
         {board.cover ? (
           <Image
           src={board.cover}

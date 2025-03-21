@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
     const { htmlContent } = await req.json(); // Receive the HTML content from frontend
 
     // Launch a headless browser
-    const browser = await puppeteer.launch({ headless: "new" });
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
 
     // Set page content to the div HTML

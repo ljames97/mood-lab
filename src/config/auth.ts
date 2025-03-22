@@ -1,5 +1,7 @@
 // auth.ts
 
+'use client';
+
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,

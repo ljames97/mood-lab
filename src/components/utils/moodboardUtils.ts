@@ -1,3 +1,5 @@
+'use client';
+
 import { db, auth } from "@/config/firebaseConfig";
 import { collection, addDoc, serverTimestamp, updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { deleteMoodboardDB } from "./indexedDBUtils";

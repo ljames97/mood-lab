@@ -6,11 +6,12 @@ import { defaultProfile } from "@/assets";
 import { useAuth } from "@/store/AuthContext";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useSafeLocalStorage } from "../hooks/useSafeLocalStorage";
 
 export default function ProfilePhoto({ size }) {
   const [profilePic, setProfilePic] = useState(null);
   const { user } = useAuth();
-  const guest = localStorage.getItem('guest');
+  const guest = useSafeLocalStorage("guest");
 
   useEffect(() => {
     if (user?.photoURL) {

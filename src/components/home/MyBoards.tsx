@@ -7,13 +7,14 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { db, auth } from "@/config/firebaseConfig";
 import { createMoodboard } from "../utils/moodboardUtils";
 import { onAuthStateChanged } from "firebase/auth";
+import { useSafeLocalStorage } from "../hooks/useSafeLocalStorage";
 
 export default function MyBoards() {
   const router = useRouter();
   const [boards, setBoards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
-  const isGuest = localStorage.getItem("guest") === "true";
+  const isGuest = useSafeLocalStorage("guest");
 
   // Track authenticated user
   useEffect(() => {

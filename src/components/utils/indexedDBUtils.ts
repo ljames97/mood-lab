@@ -1,3 +1,5 @@
+'use client';
+
 import { db } from "@/config/firebaseConfig";
 import { deleteDoc, doc } from "firebase/firestore";
 import { openDB } from "idb";

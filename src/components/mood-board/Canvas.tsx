@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useRef, useState } from "react";
 import { Canvas } from "fabric";
 import { HexColorPicker } from "react-colorful"; 

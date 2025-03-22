@@ -13,13 +13,27 @@ const ThemeContext = createContext<ThemeContextType>({
 });
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [themeColor, setThemeColor] = useState<string>(() => {
-    return localStorage.getItem("themeColor") || "#4C1D3D";
-  });
+  const [themeColor, setThemeColor] = useState<string>("#4C1D3D");
 
+  // Read from localStorage safely in useEffect
   useEffect(() => {
-    document.documentElement.style.setProperty("--theme-color", themeColor);
-    localStorage.setItem("themeColor", themeColor);
+    if (typeof window !== "undefined") {
+      const storedColor = localStorage.getItem("themeColor");
+      if (storedColor) {
+        setThemeColor(storedColor);
+        document.documentElement.style.setProperty("--theme-color", storedColor);
+      } else {
+        document.documentElement.style.setProperty("--theme-color", themeColor);
+      }
+    }
+  }, []);
+
+  // Update localStorage and CSS variable on color change
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("themeColor", themeColor);
+      document.documentElement.style.setProperty("--theme-color", themeColor);
+    }
   }, [themeColor]);
 
   return (

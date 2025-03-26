@@ -33,7 +33,9 @@ export default function Auth() {
   };
 
   const handleGuestLogin = () => {
-    localStorage.setItem('guest', 'true');
+    if (typeof window !== "undefined") {
+      localStorage.setItem('guest', 'true');
+    }
     router.push("/");
   };
 

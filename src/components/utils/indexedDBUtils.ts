@@ -1,7 +1,6 @@
 import { db } from "@/config/firebaseConfig";
 import { deleteDoc, doc } from "firebase/firestore";
 import { openDB } from "idb";
-
 const DB_NAME = "MoodboardDB";
 
 // Initialize IndexedDB
@@ -124,11 +123,13 @@ export const deleteMoodboardDB = async (id, isGuest) => {
       await tx.done;
 
       // Remove from localStorage (if applicable)
-      let guestBoards = JSON.parse(localStorage.getItem("guest_moodboards") || "[]");
-      guestBoards = guestBoards.filter(board => board.id !== id);
-      localStorage.setItem("guest_moodboards", JSON.stringify(guestBoards));
-
-      console.log(`Successfully deleted moodboard and images for guest ${id}`);
+      if (typeof window !== "undefined") {
+        let guestBoards = JSON.parse(localStorage.getItem("guest_moodboards") || "[]");
+        guestBoards = guestBoards.filter(board => board.id !== id);
+        localStorage.setItem("guest_moodboards", JSON.stringify(guestBoards));
+  
+        console.log(`Successfully deleted moodboard and images for guest ${id}`);
+      }
 
     } catch (error) {
       console.error("Error deleting moodboard and images from IndexedDB:", error);

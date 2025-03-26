@@ -13,7 +13,14 @@ export default function MyBoards() {
   const [boards, setBoards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
-  const isGuest = localStorage.getItem("guest") === "true";
+  const [isGuest, setIsGuest] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const guest = localStorage.getItem("guest");
+      setIsGuest(guest === "true");
+    }
+  }, []);
 
   // Track authenticated user
   useEffect(() => {
@@ -30,10 +37,12 @@ export default function MyBoards() {
       setLoading(true);
 
       if (isGuest) {
-        const guestBoards = JSON.parse(localStorage.getItem("guest_moodboards") || "[]");
-        setBoards(guestBoards);
-        setLoading(false);
-        return;
+        if (typeof window !== "undefined") {
+          const guestBoards = JSON.parse(localStorage.getItem("guest_moodboards") || "[]");
+          setBoards(guestBoards);
+          setLoading(false);
+          return;
+        }
       }
 
       if (!user) return; // Wait until user is loaded
@@ -67,10 +76,13 @@ export default function MyBoards() {
           createdAt: new Date().toISOString(),
         };
 
-        const guestBoards = JSON.parse(localStorage.getItem("guest_moodboards") || "[]");
-        guestBoards.push(newBoard);
-        localStorage.setItem("guest_moodboards", JSON.stringify(guestBoards));
-        moodboardId = newBoard.id;
+        if (typeof window !== "undefined") {
+          const guestBoards = JSON.parse(localStorage.getItem("guest_moodboards") || "[]");
+          guestBoards.push(newBoard);
+          localStorage.setItem("guest_moodboards", JSON.stringify(guestBoards));
+          moodboardId = newBoard.id;
+        }
+
       } else {
         moodboardId = await createMoodboard("Untitled", "");
       }

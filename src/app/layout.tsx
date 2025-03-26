@@ -32,15 +32,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <AuthProvider> 
-      <ThemeProvider>
-        <html lang="en">
-          <body>
-            <ModalWrapper modals={modals} />
-            <div className="relative">{children}</div>
-          </body>
-        </html>
-      </ThemeProvider>
-    </AuthProvider>
+    <html lang="en">
+    <body>
+      <AuthProvider>
+        <ThemeProvider>
+          <ModalWrapper />
+          <div className="relative">{children} {modals}</div>
+        </ThemeProvider>
+      </AuthProvider>
+    </body>
+  </html>
   );
 }

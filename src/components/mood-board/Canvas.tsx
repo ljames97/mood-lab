@@ -8,12 +8,19 @@ import { deleteObject, ref } from "firebase/storage";
 
 export default function CanvasPage({id, setFabricCanvas }) {
   const canvasRef = useRef(null);
-  const isGuest = localStorage.getItem("guest") === "true";
+  const [isGuest, setIsGuest] = useState<string | null>(null);
   const containerRef = useRef(null);
   const [selectedObject, setSelectedObject] = useState(null);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [color, setColor] = useState("#000000");
   const [toolPosition, setToolPosition] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const guest = localStorage.getItem("guest");
+      setIsGuest(guest);
+    }
+  }, []);
 
   useEffect(() => {
     if (!canvasRef.current || !containerRef.current) return;

@@ -7,12 +7,19 @@ import { logOut } from "@/config/auth";
 import { deleteUser, updateProfile } from "firebase/auth";
 import { auth, storage } from "@/config/firebaseConfig";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Account() {
   const router = useRouter();
-  const guest = localStorage.getItem('guest');
+  const [guest, setGuest] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const guest = localStorage.getItem("guest");
+      setGuest(guest);
+    }
+  }, []);
 
   const handleClick = () => {
     router.back();
@@ -45,7 +52,7 @@ export default function Account() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (guest === "false") {
+    if (guest !== 'true') {
       // Firebase Upload
       const user = auth.currentUser;
       if (!user) return;
@@ -58,10 +65,13 @@ export default function Account() {
     } else {
       // LocalStorage Upload (Guest)
       const reader = new FileReader();
-      reader.onloadend = () => {
-        localStorage.setItem("guestProfile", reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      if (typeof window !== "undefined") {
+        reader.onloadend = () => {
+          localStorage.setItem("guestProfile", reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+
     }
     window.location.reload()
   };
@@ -86,9 +96,9 @@ export default function Account() {
           UPDATE AVATAR
         </li>
         <li onClick={handleLogout} className="hover:cursor-pointer hover:bg-white/20 border-b border-white/80 p-4 py-6 w-screen">
-          {guest === 'false' ? 'LOGOUT' : 'LOGOUT GUEST'}
+          {guest === 'true' ? 'LOGOUT' : 'LOGOUT GUEST'}
         </li>
-        {guest === 'false' && (
+        {guest !== 'true' && (
           <li onClick={handleDeleteAccount} className="hover:cursor-pointer hover:bg-white/20 border-b border-white/80 p-4 py-6 w-screen">
           DELETE ACCOUNT
           </li>

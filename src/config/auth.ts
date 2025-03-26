@@ -20,7 +20,9 @@ export async function signIn(email, password) {
 }
 
 export async function logOut() {
-
-  localStorage.setItem('guest', 'false');
+  if (typeof window !== "undefined") {
+    localStorage.setItem('guest', 'false');
+  }
+  
   return signOut(auth);
 }

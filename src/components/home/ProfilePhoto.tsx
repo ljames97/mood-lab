@@ -10,17 +10,26 @@ import { useEffect, useState } from "react";
 export default function ProfilePhoto({ size }) {
   const [profilePic, setProfilePic] = useState(null);
   const { user } = useAuth();
-  const guest = localStorage.getItem('guest');
+  const [guest, setIsGuest] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const guest = localStorage.getItem("guest");
+      setIsGuest(guest);
+    }
+  }, []);
 
   useEffect(() => {
     if (user?.photoURL) {
       setProfilePic(user.photoURL);
     } else  if (guest === 'true') {
-      setProfilePic(localStorage.getItem("guestProfile") || null);
+      if (typeof window !== "undefined") {
+        setProfilePic(localStorage.getItem("guestProfile") || null);
+      }
     } else {
       setProfilePic(null);
     }
-  }, [user]);
+  }, [user, guest]);
 
   return (
     <>

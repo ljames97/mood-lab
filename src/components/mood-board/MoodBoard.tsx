@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/config/firebaseConfig";
 import Navbar from "./Navbar";
@@ -16,98 +16,93 @@ import { loadImageFromIndexedDB, saveMoodboardToIndexedDB } from "../utils/index
 export default function MoodBoardPage() {
   const params = useParams();
   const router = useRouter();
-  const [moodboard, setMoodboard] = useState(null);
+  const [moodboard, setMoodboard] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const isGuest = localStorage.getItem("guest") === "true";
-  const fabricRef = useRef(Canvas);
-  const fileInputRef = useRef(null);
+  const [isGuest, setIsGuest] = useState<boolean | null>(null);
+  const fabricRef = useRef<Canvas | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Ensure `id` is a string (fixes potential array issue)
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
+  // Get guest flag
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const guestVal = localStorage.getItem("guest");
+      setIsGuest(guestVal === "true");
+    }
+  }, []);
+
+  // Fetch moodboard once guest flag and id are available
+  useEffect(() => {
+    if (isGuest === null || !id) return;
+
     const fetchMoodboard = async () => {
-      if (!id) {
-        console.error("No moodboard ID provided!");
-        router.replace("/");
-        return;
-      }
+      try {
+        if (isGuest && id.startsWith("guest_")) {
+          const guestBoards = JSON.parse(localStorage.getItem("guest_moodboards") || "[]");
+          const guestBoard = guestBoards.find((board: any) => board.id === id);
 
-      if (isGuest && id.startsWith("guest_")) {
-        const guestBoards = JSON.parse(localStorage.getItem("guest_moodboards") || "[]");
-        const guestBoard = guestBoards.find(board => board.id === id);
+          if (!guestBoard) {
+            console.error("Guest moodboard not found.");
+            router.replace("/");
+            return;
+          }
 
-        if (guestBoard) {
           setMoodboard(guestBoard);
         } else {
-          console.error("Guest Moodboard not found in localStorage!");
-          router.replace("/");
-        }
-        setLoading(false);
-        return;
-      }
+          const docRef = doc(db, "moodboards", id);
+          const docSnap = await getDoc(docRef);
 
-      // Fetch Firebase MoodBoard for logged-in users
-      try {
-        console.log("Fetching Firebase moodboard...");
-        const docRef = doc(db, "moodboards", id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setMoodboard(docSnap.data());
-        } else {
-          console.error("Moodboard not found in Firestore!");
-          router.replace("/");
+          if (docSnap.exists()) {
+            setMoodboard(docSnap.data());
+          } else {
+            console.error("Moodboard not found in Firestore.");
+            router.replace("/");
+          }
         }
-      } catch (error: any) {
-        console.error("Error fetching moodboard:", error.message);
+      } catch (err: any) {
+        console.error("Failed to fetch moodboard:", err.message);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchMoodboard();
-  }, [id, isGuest, router]);
+  }, [id, isGuest]);
 
-  const handleRenameTitle = async (newTitle) => {
-    await renameTitle(id, moodboard, newTitle, isGuest, setMoodboard)
-  }
-
-  const handleDeleteMoodboard = () => {
-    deleteMoodboard(id, isGuest);
-    router.replace("/");
-  }
-
-  const saveMoodboard = async () => {
-    if (!fabricRef.current) return;
-  
-    const canvasJSON = JSON.stringify(fabricRef.current.toJSON());
-  
-    if (isGuest) {
-      // Save to localStorage for guests
-      await saveMoodboardToIndexedDB(id, canvasJSON);
-    } else {
-      // Save to Firestore for logged-in users
-      try {
-        await setDoc(doc(db, "moodboards", id), { 
-          canvasState: canvasJSON,
-          updatedAt: new Date().toISOString(),
-        }, { merge: true });
-  
-        console.log("Moodboard auto-saved to Firestore.");
-      } catch (error) {
-        console.error("Error saving to Firestore:", error.message);
-      }
-    }
-  };
-
-  // Auto-save every 5 seconds instead of listening to every object change
-  useEffect(() => {  
+  // Auto-save logic
+  useEffect(() => {
     const interval = setInterval(() => {
       saveMoodboard();
     }, 1000);
-  
-    return () => clearInterval(interval); // Cleanup when unmounting
-  }, []);
-  
+
+    return () => clearInterval(interval);
+  }, [isGuest]);
+
+  const saveMoodboard = async () => {
+    if (!fabricRef.current || !id) return;
+
+    const canvasJSON = JSON.stringify(fabricRef.current.toJSON());
+
+    try {
+      if (isGuest) {
+        await saveMoodboardToIndexedDB(id, canvasJSON);
+      } else {
+        await setDoc(
+          doc(db, "moodboards", id),
+          {
+            canvasState: canvasJSON,
+            updatedAt: new Date().toISOString(),
+          },
+          { merge: true }
+        );
+        console.log("Saved to Firestore");
+      }
+    } catch (err) {
+      console.error("Save error:", err);
+    }
+  };
+
   const addRectangle = () => {
     if (!fabricRef.current) return;
     const rect = new Rect({
@@ -116,7 +111,7 @@ export default function MoodBoardPage() {
       fill: "black",
       width: 100,
       height: 100,
-      selectable: true, // Allow dragging and resizing
+      selectable: true,
     });
     fabricRef.current.add(rect);
   };
@@ -128,41 +123,38 @@ export default function MoodBoardPage() {
       top: 200,
       fontSize: 18,
       fill: "black",
-      fontFamily: 'sans-serif',
+      fontFamily: "sans-serif",
       editable: true,
       selectable: true,
       width: 100,
     });
 
     fabricRef.current.add(text);
-    fabricRef.current.setActiveObject(text); // Select the text box immediately
-    text.bringToFront(); // Bring text to front
-    fabricRef.current.renderAll(); // Force canvas to update
+    fabricRef.current.setActiveObject(text);
+    text.bringToFront();
+    fabricRef.current.renderAll();
   };
 
   const triggerFileUpload = () => {
-    console.log('click')
     fileInputRef.current?.click();
   };
 
-  // Handle Image Upload & Add to Canvas
   const addImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file || !fabricRef.current) return;
-  
+
     const imageId = await uploadImage(file, isGuest);
     if (!imageId) return;
-  
-    // If guest, load from IndexedDB
+
     let imageUrl = imageId;
     if (isGuest) {
       imageUrl = await loadImageFromIndexedDB(imageId);
-      if (!imageUrl) return console.error("Error: Image not found in IndexedDB.");
+      if (!imageUrl) return;
     }
-  
+
     const imgElement = new window.Image();
     imgElement.src = imageUrl;
-  
+
     imgElement.onload = () => {
       const img = new fabric.Image(imgElement, {
         left: 150,
@@ -171,18 +163,18 @@ export default function MoodBoardPage() {
         scaleY: 0.5,
         selectable: true,
       });
-  
-      fabricRef.current!.add(img);
-      fabricRef.current!.renderAll();
+
+      fabricRef.current?.add(img);
+      fabricRef.current?.renderAll();
     };
-  
-    event.target.value = ""; // Clear input
+
+    event.target.value = ""; // Reset file input
   };
 
   const addStickyNote = () => {
     if (!fabricRef.current) return;
-  
-    const stickyNote = new fabric.Textbox("Add note...", {
+
+    const sticky = new fabric.Textbox("Add note...", {
       left: 150,
       top: 150,
       width: 120,
@@ -194,35 +186,43 @@ export default function MoodBoardPage() {
       selectable: true,
       lineHeight: 1.5,
       textAlign: "left",
-      wrap: "word",
-      splitByGrapheme: true,
     });
-  
-    stickyNote.set("height", 120);
 
-    // Disable text scaling to prevent distortion
-  stickyNote.setControlsVisibility({
-    mt: false, // Middle Top
-    mb: false, // Middle Bottom
-    ml: false, // Middle Left
-    mr: false, // Middle Right
-  });
-  
-  fabricRef.current.add(stickyNote);
-  fabricRef.current.setActiveObject(stickyNote);
-  fabricRef.current.bringToFront(stickyNote);
-  fabricRef.current.renderAll();
+    sticky.set("height", 120);
+    sticky.setControlsVisibility({ mt: false, mb: false, ml: false, mr: false });
+
+    fabricRef.current.add(sticky);
+    fabricRef.current.setActiveObject(sticky);
+    fabricRef.current.bringToFront(sticky);
+    fabricRef.current.renderAll();
   };
 
+  const handleRenameTitle = async (newTitle: string) => {
+    await renameTitle(id, moodboard, newTitle, isGuest, setMoodboard);
+  };
+
+  const handleDeleteMoodboard = () => {
+    deleteMoodboard(id, isGuest);
+    router.replace("/");
+  };
 
   if (loading) return <p>Loading...</p>;
   if (!moodboard) return <p>Error: Moodboard not found</p>;
 
   return (
     <div className="h-screen flex flex-col bg-gray-100">
-      <Navbar handleRenameTitle={handleRenameTitle} handleDeleteMoodboard={handleDeleteMoodboard} title={moodboard.title} />
+      <Navbar
+        handleRenameTitle={handleRenameTitle}
+        handleDeleteMoodboard={handleDeleteMoodboard}
+        title={moodboard.title}
+      />
       <CanvasPage id={id} setFabricCanvas={(canvas) => (fabricRef.current = canvas)} />
-      <Toolbar triggerFileUpload={triggerFileUpload} addRectangle={addRectangle} addText={addText} addStickyNote={addStickyNote} />
+      <Toolbar
+        triggerFileUpload={triggerFileUpload}
+        addRectangle={addRectangle}
+        addText={addText}
+        addStickyNote={addStickyNote}
+      />
       <input
         type="file"
         accept="image/*"

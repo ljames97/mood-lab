@@ -96,7 +96,7 @@ export default function Account() {
           UPDATE AVATAR
         </li>
         <li onClick={handleLogout} className="hover:cursor-pointer hover:bg-white/20 border-b border-white/80 p-4 py-6 w-screen">
-          {guest === 'true' ? 'LOGOUT' : 'LOGOUT GUEST'}
+          {guest !== 'true' ? 'LOGOUT' : 'LOGOUT GUEST'}
         </li>
         {guest !== 'true' && (
           <li onClick={handleDeleteAccount} className="hover:cursor-pointer hover:bg-white/20 border-b border-white/80 p-4 py-6 w-screen">

@@ -36,8 +36,8 @@ export default function RootLayout({
     <body>
       <AuthProvider>
         <ThemeProvider>
-          <ModalWrapper />
-          <div className="relative">{children} {modals}</div>
+          <ModalWrapper modals={modals}/>
+          <div className="relative">{children} </div>
         </ThemeProvider>
       </AuthProvider>
     </body>

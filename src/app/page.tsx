@@ -27,5 +27,8 @@ export default function Page() {
 
   if (loading) return <p>Loading...</p>;
 
-  return user ? <HomePage /> : <Auth /> || isGuest === 'true' ? <HomePage /> : <Auth /> ;
-}
+  if (user || isGuest === 'true') {
+    return <HomePage />;
+  }
+  
+  return <Auth />;}

@@ -23,7 +23,8 @@ export default function CanvasPage({id, setFabricCanvas }) {
   }, []);
 
   useEffect(() => {
-    if (!canvasRef.current || !containerRef.current) return;
+    console.log(isGuest)
+    if (!canvasRef.current || !containerRef.current || isGuest === null) return;
 
     const containerWidth = containerRef.current.clientWidth;
     const containerHeight = containerRef.current.clientHeight || 600;
@@ -39,10 +40,11 @@ export default function CanvasPage({id, setFabricCanvas }) {
 
     const loadMoodboard = async () => {
       if (!canvas) return;
-  
-      let canvasState = isGuest
-        ? await loadMoodboardFromIndexedDB(id)
-        : (await getDoc(doc(db, "moodboards", id))).data()?.canvasState;
+
+      let canvasState = isGuest === 'true'
+      ? await loadMoodboardFromIndexedDB(id)
+      : (await getDoc(doc(db, "moodboards", id))).data()?.canvasState;
+    
   
       if (!canvasState) {
         console.warn("No saved moodboard found.");
@@ -131,7 +133,7 @@ export default function CanvasPage({id, setFabricCanvas }) {
       document.removeEventListener("click", handleClickOutside);
       canvas.dispose();
     };
-  }, [setFabricCanvas]);
+  }, [isGuest, setFabricCanvas]);
 
 
 

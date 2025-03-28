@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MoodLab – Visual Moodboard Creator (Next.js + Firebase + Fabric.js)
 
-## Getting Started
+MoodLab is a modern visual moodboard app that allows users to create, customise, and export moodboards with sticky notes, images, text, and drawings. It supports both guest mode (localStorage + IndexedDB) and authenticated users (Firebase Auth & Firestore).
 
-First, run the development server:
+---
+
+## Features
+
+- Guest & Authenticated modes
+- Drag-and-drop canvas with:
+  - Images (uploaded or stored locally)
+  - Sticky notes
+  - Text
+  - Shapes
+- Color picker & styling
+- Auto-save (Firestore or IndexedDB)
+- Firebase integration:
+  - Auth
+  - Firestore moodboard storage
+  - Firebase Storage for image uploads
+- Export or delete moodboards
+- Mobile responsive
+
+---
+
+## Tech Stack
+
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Firebase (Auth, Firestore, Storage)
+- Fabric.js (Canvas-based UI)
+
+---
+
+## Setup
+
+### 1. Clone the repo
 
 ```bash
+git clone https://github.com/ljames97/mood-lab.git
+cd moodlab
+2. Install dependencies
+bash
+Copy
+Edit
+npm install
+3. Configure Firebase
+Create a .env.local file in the root and add your Firebase keys:
+
+ini
+Copy
+Edit
+NEXT_PUBLIC_FIREBASE_API_KEY=your_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+You can get these from your Firebase project settings.
+
+4. Run dev server
+bash
+Copy
+Edit
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Build & Deploy
+To build for production:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+bash
+Copy
+Edit
+npm run build
+npm start
+This app is designed for deployment on Vercel, but you can deploy it anywhere Next.js is supported.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+TODO:
+ - Undo/redo functionality
+ - Testing
+ - Real-time collaboration
+ - Add more object tools (arrows, custom shapes)
+ - Better mobile UX
+ - Export to PDF

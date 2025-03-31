@@ -1,8 +1,7 @@
 Final:
 - typescript and documentation
-- readme
 - tests
-- portfolio and case study
+- case study
 
 - need to fix scaling issues/aspect ratio between mobile vs desktop
 - board cover photo based on recent upload

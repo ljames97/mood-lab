@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/store/AuthContext";
 import ModalWrapper from "@/components/modal/ModalWrapper";
 import { ThemeProvider } from "@/store/ThemeContext";
+import ViewportFixProvider from "@/components/utils/appViewportFix";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,8 +37,10 @@ export default function RootLayout({
     <body>
       <AuthProvider>
         <ThemeProvider>
+        <ViewportFixProvider>
           <ModalWrapper modals={modals}/>
           <div className="relative">{children} </div>
+          </ViewportFixProvider>
         </ThemeProvider>
       </AuthProvider>
     </body>
